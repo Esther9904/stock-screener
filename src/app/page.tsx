@@ -1,4 +1,5 @@
-import { mockStocks } from "@/data/mockStocks"
+import { mockStocks } from "@/data/mockStocks";
+import StockRow from "@/components/StockRow"
 export default function Home() {
   return(
       <main>
@@ -6,7 +7,7 @@ export default function Home() {
       
         <ul>
           {mockStocks.map((stock) => (
-            <li key={stock.tickerSymbol}>{stock.tickerSymbol} {stock.company} ${stock.currentPrice.toFixed(2)}</li>
+            <StockRow key={stock.tickerSymbol} stock={stock} />
           ))}
         </ul>
       </main>
