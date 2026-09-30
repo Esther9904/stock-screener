@@ -5,6 +5,11 @@ interface StockRowProps {
 
 export default function StockRow({ stock }: StockRowProps){
     return(
-        <li>{stock.tickerSymbol} {stock.company} ${stock.currentPrice.toFixed(2)}</li>
+        <li className="grid grid-cols-3 px-4 py-2">
+            <span>{stock.tickerSymbol}</span>
+            <span>{stock.company}</span>
+            <span className="text-right">${stock.currentPrice.toFixed(2)}</span>
+        </li>
+    
     )
 }
