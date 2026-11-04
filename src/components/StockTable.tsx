@@ -1,7 +1,7 @@
 "use client";
 import { Stock } from "@/types/stock";
-import { useRef } from "react";
-import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
+import { useRef, useState } from "react";
+import { useReactTable, getCoreRowModel, getSortedRowModel, flexRender, SortingState } from "@tanstack/react-table";
 import { stockColumns } from "@/components/columns";
 import StockRow from "@/components/StockRow"
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -11,10 +11,14 @@ interface StockTableProps {
 
 export default function StockTable({ stocks }: StockTableProps){
     const parentRef = useRef<HTMLDivElement>(null)
+    const [sorting, setSorting] = useState<SortingState>([{ id: "currentPrice", desc: true }])
     const table = useReactTable({
         data: stocks,
         columns: stockColumns,
         getCoreRowModel: getCoreRowModel(),
+        state: { sorting},
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
     })
     const { rows } = table.getRowModel()
 
@@ -33,8 +37,14 @@ export default function StockTable({ stocks }: StockTableProps){
             {table.getHeaderGroups().map((headerGroup) => (
                 <div key={headerGroup.id} className="grid grid-cols-5 px-4 py-2 font-bold sticky top-0 z-10 bg-white">
                     {headerGroup.headers.map((header) => (
-                        <span key={header.id} className={`${rightAlignedColumns.includes(header.column.id) ? "text-right" : ""}`}>
+                        <span
+                            key={header.id}
+                            onClick={header.column.getToggleSortingHandler()}
+                            className={`cursor-pointer select-none ${rightAlignedColumns.includes(header.column.id) ? "text-right" : ""}`}
+                        >
                             {flexRender(header.column.columnDef.header, header.getContext())}
+                            {header.column.getIsSorted() === "asc" && "↑"}
+                            {header.column.getIsSorted() === "desc" && "↓"}
                         </span>
                     ))}
                 </div>
