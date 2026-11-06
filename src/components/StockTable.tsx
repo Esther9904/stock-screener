@@ -1,6 +1,6 @@
 "use client";
 import { Stock } from "@/types/stock";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, flexRender, SortingState } from "@tanstack/react-table";
 import { stockColumns } from "@/components/columns";
 import StockRow from "@/components/StockRow"
@@ -11,7 +11,6 @@ interface StockTableProps {
 
 export default function StockTable({ stocks }: StockTableProps){
     const parentRef = useRef<HTMLDivElement>(null)
-    const keystrokeTime = useRef(0)
     const [sorting, setSorting] = useState<SortingState>([{ id: "currentPrice", desc: true }]);
     const [globalFilter, setGlobalFilter] = useState("");
     const table = useReactTable({
@@ -25,15 +24,7 @@ export default function StockTable({ stocks }: StockTableProps){
         getFilteredRowModel: getFilteredRowModel(),
     })
     const { rows } = table.getRowModel();
-
-    useEffect(() =>  {
-        if (keystrokeTime.current > 0) {
-            console.log(`Filter to ${rows.length} rows: ${(performance.now() - keystrokeTime.current).toFixed(1)}ms`)
-            keystrokeTime.current = 0
-        }
-    }, [rows]);
     
-
     const rightAlignedColumns = ["currentPrice", "percentPriceChange", "tradingVolume"]
 
     const rowVirtualizer = useVirtualizer({
@@ -48,10 +39,7 @@ export default function StockTable({ stocks }: StockTableProps){
         <div>
             <input
                 value={globalFilter}
-                onChange={(event) => {
-                    keystrokeTime.current = performance.now()
-                    setGlobalFilter(event.target.value)
-                }}
+                onChange={(event) => setGlobalFilter(event.target.value)}
                 placeholder="Search ticker or company"
                 className="mb-2 w-full max-w-sm rounded border border-gray-300 px-3 py-2"
             />
