@@ -1,6 +1,7 @@
 "use client";
 import { Stock } from "@/types/stock";
 import { useRef, useState } from "react";
+import { useScreenerStore } from "@/store/screenerStore";
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, flexRender, SortingState } from "@tanstack/react-table";
 import { stockColumns } from "@/components/columns";
 import StockRow from "@/components/StockRow"
@@ -12,7 +13,8 @@ interface StockTableProps {
 export default function StockTable({ stocks }: StockTableProps){
     const parentRef = useRef<HTMLDivElement>(null)
     const [sorting, setSorting] = useState<SortingState>([{ id: "currentPrice", desc: true }]);
-    const [globalFilter, setGlobalFilter] = useState("");
+    const globalFilter = useScreenerStore((state) => state.globalFilter);
+    const setGlobalFilter = useScreenerStore((state) => state.setGlobalFilter);
     const table = useReactTable({
         data: stocks,
         columns: stockColumns,
