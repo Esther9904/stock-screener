@@ -6,7 +6,7 @@ export default function FilterStatus() {
 
     return (
         <p className="px-4 pb-2 text-sm text-gray-600">
-            {globalFilter === "" ? "Showing all stocks" : `Searching for: ${globalFilter}`}
+            {globalFilter === "" ? "Showing all stocks" : `Searching for: ${globalFilter}`} 
         </p>
     )
 }
