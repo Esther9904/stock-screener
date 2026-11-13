@@ -9,6 +9,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 export default function StockTable(){
     const parentRef = useRef<HTMLDivElement>(null)
     const stocks = useScreenerStore((state) => state.stocks)
+    const setSelectedTicker = useScreenerStore((state) => state.setSelectedTicker)
+    const selectedTicker = useScreenerStore((state) => state.selectedTicker)
     const [sorting, setSorting] = useState<SortingState>([{ id: "currentPrice", desc: true }]);
     const globalFilter = useScreenerStore((state) => state.globalFilter);
     const setGlobalFilter = useScreenerStore((state) => state.setGlobalFilter);
@@ -70,6 +72,8 @@ export default function StockTable(){
                     {rowVirtualizer.getVirtualItems().map((virtualItem) => (
                         <div
                             key={virtualItem.key}
+                            className={`cursor-pointer ${rows[virtualItem.index].original.tickerSymbol === selectedTicker ? "bg-blue-50" : ""}`}
+                            onClick={() => setSelectedTicker(rows[virtualItem.index].original.tickerSymbol)}
                             style={{
                                 position: "absolute",
                                 top: 0,
